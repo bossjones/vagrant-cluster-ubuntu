@@ -48,7 +48,7 @@ serverspec-install:
 	bundle install --path .vendor
 
 download-roles:
-	ansible-galaxy install -r install_roles.txt --roles-path roles/
+	ansible-galaxy install -r install_roles.txt --roles-path roles/ -vvv
 
 install-cidr-brew:
 	pip install cidr-brewer
@@ -64,19 +64,21 @@ bootstrap-molecule:
 ci:
 	molecule test
 
+bootstrap: venv
+
 # The tests are written in Python. Make a virtualenv to handle the dependencies.
 venv: requirements.txt
-	@if [ -z $$PYTHON3 ]; then\
-	    PY3_MINOR_VER=`python3 --version 2>&1 | cut -d " " -f 2 | cut -d "." -f 2`;\
-	    if (( $$PY3_MINOR_VER < 5 )); then\
-		echo "Couldn't find python3 in \$PATH that is >=3.5";\
-		echo "Please install python3.5 or later or explicity define the python3 executable name with \$PYTHON3";\
+	@if [ -z $$PYTHON2 ]; then\
+	    PY2_MINOR_VER=`python2 --version 2>&1 | cut -d " " -f 2 | cut -d "." -f 2`;\
+	    if (( $$PY2_MINOR_VER < 7 )); then\
+		echo "Couldn't find python2 in \$PATH that is >=3.5";\
+		echo "Please install python2.7 or later or explicity define the python3 executable name with \$PYTHON2";\
 	        echo "Exiting here";\
 	        exit 1;\
 	    else\
-		export PYTHON3="python3.$$PY3_MINOR_VER";\
+		export PYTHON2="python2.$$PY2_MINOR_VER";\
 	    fi;\
 	fi;\
-	test -d venv || virtualenv --python=$$PYTHON3 venv;\
+	test -d venv || virtualenv --python=$$PYTHON2 venv;\
 	pip install -r requirements.txt;\
 	touch venv;\
