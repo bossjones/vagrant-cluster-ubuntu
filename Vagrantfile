@@ -18,6 +18,11 @@ $forwarded_ports = {}
 
 # SOURCE: https://github.com/bossjones/docker-swarm-vbox-lab/blob/master/Vagrantfile
 $docker_script = <<SHELL
+if [ -f /vagrant_bootstrap ]; then
+   echo "vagrant_bootstrap EXISTS ALREADY"
+   exit 0
+fi
+
 export DEBIAN_FRONTEND=noninteractive
 sudo apt-get autoremove -y && \
 sudo apt-get update -yqq && \
@@ -214,7 +219,9 @@ git clone https://github.com/dev-sec/ansible-os-hardening.git ansible-os-hardeni
 cd /home/vagrant/ansible && \
 ansible-playbook -i hosts playbook.yml && \
 cd /home/vagrant && \
-sudo chown -R vagrant:vagrant /home/vagrant/
+sudo chown -R vagrant:vagrant /home/vagrant/ && \
+sudo touch /vagrant_bootstrap && \
+sudo chown vagrant:vagrant /vagrant_bootstrap
 SHELL
 
 # Attempt to apply the deprecated environment variable NUM_INSTANCES to
@@ -364,25 +371,26 @@ Vagrant.configure("2") do |config|
 
       # Only execute once the Ansible provisioner,
       # when all the machines are up and ready.
-      # current_i = "#{i}"
+      current_i = "#{i}"
 
-      # if current_i == "#{num_instances}"
-      #   #
-      #   # Run Ansible from the Vagrant Host
-      #   #
-      #   # config.vm.provision "ansible" do |ansible|
-      #   #   ansible.playbook = "playbook.yml"
-      #   #   ansible.verbose = "-v"
-      #   #   ansible.sudo = true
-      #   #   ansible.host_key_checking = false
-      #   #   ansible.limit = 'all'
-      #   #   ansible.inventory_path = "provisioning/inventory"
-      #   #   ansible.sudo = true
-      #   #   ansible.extra_vars = {
-      #   #     public_key: public_key
-      #   #   }
-      #   # end
-      # end  # if i == num_instances
+      if current_i == "#{$num_instances}"
+
+        # Run Ansible from the Vagrant Host
+
+        config.vm.provision "ansible" do |ansible|
+          ansible.playbook = "playbook.yml"
+          ansible.verbose = "-v"
+          ansible.sudo = true
+          ansible.host_key_checking = false
+          ansible.limit = 'all'
+          # ansible.inventory_path = "provisioning/inventory"
+          ansible.inventory_path = "ubuntu-inventory"
+          # ansible.sudo = true
+          # ansible.extra_vars = {
+          #   public_key: public_key
+          # }
+        end
+      end  # if i == num_instances
     end
   end
 end
