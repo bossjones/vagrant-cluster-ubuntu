@@ -1,0 +1,84 @@
+---
+# Ramdisk setup
+
+- name: Set up ramdisk.
+  mount:
+    fstype: ramfs
+    name: /mnt/ramdisk
+    opts: defaults,mode=777
+    src: ramfs
+    state: mounted
+
+- name: Ensure absent cache dir on ramdisk.
+  file:
+    dest: /mnt/ramdisk/repository/cache
+    state: absent
+  when: cache_params != none
+
+- name: Ensure absent cache dir on disk.
+  file:
+    dest: "{{ base_vars.USER_HOME }}/repository/cache"
+    state: absent
+  when: cache_params != none
+
+- name: Ensure absent repository temp dir on ramdisk.
+  file:
+    dest: /mnt/ramdisk/repository/tmp
+    state: absent
+
+- name: Ensure absent repository temp dir on disk.
+  file:
+    dest: "{{ base_vars.USER_HOME }}/repository/datastore/tmp"
+    state: absent
+
+- name: Ensure absent tmp dir on ramdisk.
+  file:
+    dest: /mnt/ramdisk/tmp
+    state: absent
+  when: bossjones_use_ramdisk == True
+
+- name: Ensure tmp dir on ramdisk.
+  file:
+    dest: /mnt/ramdisk/tmp
+    owner: "{{ base_vars.USER }}"
+    group: "{{ base_vars.USER }}"
+    state: directory
+
+- name: Ensure cache dir on ramdisk.
+  file:
+    dest: /mnt/ramdisk/repository/cache
+    owner: "{{ base_vars.USER }}"
+    group: "{{ base_vars.USER }}"
+    state: directory
+  when: cache_params != none
+
+- name: Ensure repository tmp dir on ramdisk.
+  file:
+    dest: /mnt/ramdisk/repository/tmp
+    owner: "{{ base_vars.USER }}"
+    group: "{{ base_vars.USER }}"
+    state: directory
+
+- name: Ensure repository/datastore dir.
+  file:
+    dest: "{{ base_vars.USER_HOME }}/repository/datastore"
+    owner: "{{ base_vars.USER }}"
+    group: "{{ base_vars.USER }}"
+    state: directory
+
+- name: Link repository tmp to ramdisk.
+  file:
+    src: /mnt/ramdisk/repository/tmp
+    dest: "{{ base_vars.USER_HOME }}/repository/datastore/tmp"
+    owner: "{{ base_vars.USER }}"
+    group: "{{ base_vars.USER }}"
+    state: link
+
+- name: Link cache to ramdisk.
+  file:
+    src: /mnt/ramdisk/repository/cache
+    dest: "{{ base_vars.USER_HOME }}/repository/cache"
+    owner: "{{ base_vars.USER }}"
+    group: "{{ base_vars.USER }}"
+    state: link
+  when: cache_params != none

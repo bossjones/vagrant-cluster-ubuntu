@@ -1,0 +1,29 @@
+---
+
+- name: Create log folder for pysyslog
+  file:
+    path: /var/log/pysyslog
+    state: directory
+
+- name: Sync Python monitoring scripts.
+  synchronize:
+    src: scripts/
+    dest: /opt/pv/scripts/python
+    archive: no
+    recursive: yes
+
+- name: Install cronjobs for load monitoring
+  cron:
+    name: "pysyslog load monitoring"
+    minute: "*/1"
+    job: "/usr/bin/python /opt/pv/scripts/python/load_monitoring.py"
+    cron_file: load-monitoring
+    user: root
+
+- name: Install cronjobs for process monitoring
+  cron:
+    name: "pysyslog process monitoring"
+    minute: "*/1"
+    job: "/usr/bin/python /opt/pv/scripts/python/process_monitoring.py"
+    cron_file: process-monitoring
+    user: root

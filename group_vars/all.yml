@@ -1,0 +1,167 @@
+---
+# ELK variables
+elasticsearch_port: '9222'
+elasticsearch_heap_size: 20g
+elasticsearch_max_open_files: 250000
+logstash_port: '5555'
+logstash_jmx: true # set to false to disable jmx monitoring
+logstash_jmx_host: localhost
+logstash_elasticsearch_host: localhost
+logstash_elasticsearch_port: 9222
+logstash_heap_size: 10g
+beats_filebeat: true
+beats_topbeat: true
+beats_packetbeat: false
+
+docker_selinux: disabled
+
+fail2ban_jails: [sshd, postfix, dovecot]
+
+base_vars:
+  PYTHON_VERSION_MAJOR: '3'
+  PYTHON_VERSION: '3.6.2'
+  GSTREAMER: '1.0'
+  USER: 'vagrant'
+  USER_HOME: '/home/vagrant'
+
+virtualenv_vars:
+  DEV_DIR: "{{ base_vars.USER_HOME }}/dev"
+  VIRT_ROOT: "{{ base_vars.USER_HOME }}/.virtualenvs"
+  WORKON_HOME: "{{ base_vars.USER_HOME }}/.virtualenvs"
+  PROJECT_HOME: "{{ base_vars.USER_HOME }}/dev"
+  VIRTUALENVWRAPPER_PYTHON: "/usr/bin/python3"
+  VIRTUALENVWRAPPER_VIRTUALENV: "/usr/bin/virtualenv"
+  VIRTUALENVWRAPPER_SCRIPT: "/usr/bin/virtualenvwrapper.sh"
+  PYTHONSTARTUP: "$HOME/.pythonrc"
+  PIP_DOWNLOAD_CACHE: "$HOME/.pip/cache"
+
+rbenv:
+  env: user
+  version: v1.1.1
+  default_ruby: 2.4.2
+  rubies:
+  - version: 2.4.2
+powerline_default_top_theme: powerline
+powerline_shell_vcs_branch: yes
+powerline_users:
+  - "{{ base_vars.USER }}"
+
+rbenv_users:
+  - "{{ base_vars.USER }}"
+
+rbenv_repo: "https://github.com/rbenv/rbenv.git"
+
+rbenv_plugins:
+  - { name: "rbenv-vars",         repo: "https://github.com/rbenv/rbenv-vars.git",         version: "v1.2.0" }
+  - { name: "ruby-build",         repo: "https://github.com/rbenv/ruby-build.git",         version: "master" }
+  - { name: "rbenv-default-gems", repo: "https://github.com/rbenv/rbenv-default-gems.git", version: "ead67889c91c53ad967f85f5a89d986fdb98f6fb" }
+  - { name: "rbenv-installer",    repo: "https://github.com/rbenv/rbenv-installer.git",    version: "bc21e7055dcc8f5f9bc66ce0c78cc9ae0c28cd7a" }
+  - { name: "rbenv-update",       repo: "https://github.com/rkh/rbenv-update.git",         version: "1961fa180280bb50b64cbbffe6a5df7cf70f5e50" }
+  - { name: "rbenv-whatis",       repo: "https://github.com/rkh/rbenv-whatis.git",         version: "v1.0.0" }
+  - { name: "rbenv-use",          repo: "https://github.com/rkh/rbenv-use.git",            version: "v1.0.0" }
+
+rbenv_root: "{% if rbenv.env == 'system' %}/usr/local/rbenv{% else %}~/.rbenv{% endif %}"
+
+nvm_repo: "git://github.com/creationix/nvm.git"
+nvm_root: "{{ base_vars.USER_HOME }}/.nvm"
+nvm_env: user
+nvm_version: v0.33.1
+nvm_default_node_version: stable
+nvm_node_versions:
+  - stable
+nvm_global_packages:
+  - vtop
+  - gtop
+  - whereami
+  - figlet-cli
+  - get-port-cli
+  - getmac
+  # - mediumcli
+  - speed-test
+  - spoof
+  - tldr
+  - wireless-tools
+  - yaml-lint
+  - pathogen-pm
+  # - manga-scraper
+nvm_users:
+  - "{{ base_vars.USER }}"
+
+# net.core.somaxconn=65535
+# net.ipv4.ip_local_port_range=10240  63999
+# net.ipv4.tcp_tw_recycle=0
+# net.ipv4.tcp_tw_reuse=1
+# net.ipv4.tcp_max_syn_backlog=65535
+# net.ipv4.tcp_max_tw_buckets=1440000
+# net.ipv4.tcp_window_scaling=1
+# net.ipv4.tcp_congestion_control=htcp
+# net.core.netdev_max_backlog=250000
+# net.ipv4.tcp_mtu_probing=1
+# net.ipv4.tcp_slow_start_after_idle=0
+# fs.file-max=6511048
+# net.netfilter.nf_conntrack_max=262144
+# net.ipv4.tcp_max_syn_backlog=4096
+
+fakejavaprocess_Xmx: 80g
+fakejavaprocess_Xms: 80g
+fakejavaprocess_jvm_opts: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xloggc:/var/log/bossjones/gc.log -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=50M"
+
+# Default is 256, bossjones like 3072, which is half of the available heap
+fakejavaprocess_nodestore_cache_size: 20480 # in Mb
+
+fakejavaprocess_run_mode: author # author or publish
+fakejavaprocess_port: 4502
+fakejavaprocess_timeout_wait: 1200
+fakejavaprocess_persistence_mode: crx3mongo # crx3mongo, crx3tar
+fakejavaprocess_jmx_port: 9010
+
+fakejavaprocess_admin_user: bossjones
+fakejavaprocess_admin_password: bossjones
+
+fakejavaprocess_mongodb_port: 27017
+fakejavaprocess_mongodb_db: bossjones-author
+fakejavaprocess_mongodb_user: bossjones
+fakejavaprocess_mongodb_password: password
+
+# INFO: soft and hard limit: http://unix.stackexchange.com/questions/29577/ulimit-difference-between-hard-and-soft-limits
+# INFO: documentation: https://helpx.adobe.com/experience-manager/kb/TooManyOpenFiles.html
+
+fakejavaprocess_ulimit_soft: 8092
+fakejavaprocess_ulimit_hard: 20000
+fakejavaprocess_file_max_limit: 300000
+
+fakejavaprocess_swapfile_size: 100GB
+
+# Use ramdisk on bossjones
+fakejavaprocess_use_ramdisk: true
+
+# https://docs.mongodb.com/manual/core/replica-set-oplog/#replica-set-oplog
+mongodb_conf_oplogSize: 5120
+
+mongodb_conf_directoryPerDB: true
+mongodb_conf_directoryForIndexes: false
+
+# names and passwords for administrative users
+mongodb_user_admin_name: bossjones
+mongodb_user_admin_password: password
+
+# beats client programs to install on the hosts
+beats_clients:
+  - topbeat
+  - filebeat
+  # - packetbeat
+
+kibana_http_port: 80
+
+elasticsearch_indices:
+  - { node: bossjones-primary, beat: filebeat, time_field_name: EventTime }
+  - { node: bossjones-secondary, beat: filebeat, time_field_name: EventTime }
+  - { node: bossjones-primary, beat: topbeat, time_field_name: EventTime }
+  - { node: bossjones-secondary, beat: topbeat, time_field_name: EventTime }
+  - { node: mongodb-primary, beat: filebeat, time_field_name: EventTime }
+  - { node: mongodb-secondary, beat: filebeat, time_field_name: EventTime }
+  - { node: mongodb-primary, beat: topbeat, time_field_name: EventTime }
+  - { node: mongodb-secondary, beat: topbeat, time_field_name: EventTime }
+
+spark_version: "2.0.0-bin-hadoop2.6"
+spark_usr_parent_dir: "{{ base_vars.USER_HOME }}"

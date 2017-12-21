@@ -1,0 +1,41 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  # vars_files:
+  #   - vars/main.yml
+  roles:
+    - ansible-role-java
+    - ansible-role-common
+    - ansible-role-maven
+    # - role: bossjones-ipv6
+    # - role: ksylvan.docker
+    # - role: motd
+    # - role: bossjones-firewalld
+    # - role: mjanser.powerline
+    # - role: joshualund.golang
+    # - role: common
+    #   theme: "powerline-plain"
+    #   repository: https://github.com/revans/bash-it.git
+    #   version: master
+    #   aliases:
+    #     - general
+    #   plugins:
+    #     - base
+    #     - history
+    #   completions:
+    #     - git
+    # - role: bossjones-cli-tools
+
+  pre_tasks:
+
+    - name: Fail if Ansible is ancient
+      fail: msg="We need Ansible >= 2.0. Please update your kit. 'pip install -U Ansible'"
+      when: ansible_version.major < 2
+      tags:
+        - always
+
+    - name: Include vars from local-configure.yml if found
+      include_vars: "{{ item }}"
+      with_first_found:
+       - null.yml

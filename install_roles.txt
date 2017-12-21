@@ -1,0 +1,104 @@
+# install_roles.yml
+bas-ansible-roles-collection.system-users
+bas-ansible-roles-collection.system-ssh
+bas-ansible-roles-collection.system-security
+bas-ansible-roles-collection.system-groups
+bas-ansible-roles-collection.system-core
+bas-ansible-roles-collection.system-hostname
+bas-ansible-roles-collection.git
+
+# https://github.com/angstwad/docker.ubuntu
+angstwad.docker_ubuntu
+
+# ********************** geerlingguy **********************
+#
+# https://github.com/geerlingguy/ansible-role-security
+geerlingguy.security
+geerlingguy.clamav
+# https://github.com/geerlingguy/ansible-role-dotfiles
+# https://github.com/geerlingguy/dotfiles
+geerlingguy.dotfiles
+geerlingguy.gitlab
+geerlingguy.nodejs
+geerlingguy.docker
+# ********************** geerlingguy - END **********************
+
+zzet.rbenv
+nickhammond.logrotate
+
+# SOURCE: https://galaxy.ansible.com/nkadithya31/playbooks/
+# nkadithya31.playbooks
+chrismeyersfsu.provision_docker
+# https://github.com/William-Yeh/ansible-oracle-java
+williamyeh.oracle-java
+# https://github.com/jlund/ansible-go
+joshualund.golang
+
+sadsfae.ansible-elk
+atosatto.docker-swarm
+# https://github.com/singleplatform-eng/ansible-users
+singleplatform-eng.users
+
+# https://github.com/yaegashi/ansible-role-blockinfile
+yaegashi.blockinfile
+
+# https://github.com/jdauphant/ansible-role-ssl-certs
+jdauphant.ssl-certs
+
+bakhti.elk
+
+
+
+bennojoy.ntp
+# https://galaxy.ansible.com/jorti/fail2ban/
+jorti.fail2ban
+ksylvan.docker
+juju4.ipv6
+# https://github.com/geerlingguy/ansible-role-java
+# 'java-1.7.0-openjdk'
+# sleighzy.java-8
+# https://galaxy.ansible.com/bas-ansible-roles-collection/system-core/
+bas-ansible-roles-collection.system-core
+# https://galaxy.ansible.com/bas-ansible-roles-collection/system-ssh/
+bas-ansible-roles-collection.system-ssh
+
+# https://github.com/geerlingguy/ansible-role-redis
+# geerlingguy.redis
+
+# source: https://github.com/geerlingguy/ansible-role-raspberry-pi
+# geerlingguy.raspberry-pi
+
+# https://github.com/geerlingguy/ansible-role-postfix
+# geerlingguy.postfix
+
+# https://github.com/geerlingguy/ansible-role-nodejs
+# geerlingguy.nodejs
+
+# https://github.com/geerlingguy/ansible-role-dotfiles
+# geerlingguy.dotfiles
+
+# https://galaxy.ansible.com/zzet/rbenv/
+zzet.rbenv
+
+# https://galaxy.ansible.com/mmannerm/bash_it/
+mmannerm.bash_it
+
+# https://galaxy.ansible.com/carlba/bash_aliases/
+carlba.bash_aliases
+
+# https://galaxy.ansible.com/joshualund/golang/
+joshualund.golang
+
+# https://galaxy.ansible.com/mjanser/powerline/
+mjanser.powerline
+
+pablocrivella.nvm
+
+# https://github.com/dev-sec/ansible-os-hardening
+dev-sec.os-hardening
+
+# https://github.com/dev-sec/ansible-ssh-hardening
+dev-sec.ssh-hardening
+
+# https://github.com/dev-sec/ansible-nginx-hardening
+dev-sec.nginx-hardening

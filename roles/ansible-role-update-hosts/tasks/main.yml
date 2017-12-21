@@ -1,0 +1,10 @@
+---
+
+# Example from: https://github.com/geerlingguy/ansible-vagrant-examples/blob/master/elk/provisioning/web/playbook.yml
+
+# - name: Ensure logs server is in hosts file.
+#   lineinfile:
+#     dest: /etc/hosts
+#     regexp: '.*logs$'
+#     line: "192.168.9.90 logs"
+#     state: present

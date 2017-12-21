@@ -1,0 +1,101 @@
+---
+
+- name: Update apt keys
+  command: apt-key update
+
+- name: Update apt
+  apt: update_cache=yes
+  become: true
+
+- name: Install pip, ansible dependencies and rsync.
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-pip
+    - rsync
+    - python-dev
+    - python3-dev
+    - awscli
+
+- name: Install Ansible and PIP dependencies.
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - ansible
+    - markupsafe
+    - boto
+
+- name: Install common user packages.
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  with_items:
+    - htop
+    - vim
+    - iftop
+    - iotop
+    - ntp
+    - unzip
+    - tar
+    - pigz
+    - zip
+    - gcc
+    - python-pip
+    - python-dev
+    - logrotate
+    - sysstat
+    - super
+    - traceroute
+
+- name: Install boto and awscli from pip.
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - boto
+    - awscli
+    - psutil
+
+- name: Disable ipv6.
+  sysctl:
+    name: "{{ item }}"
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  with_items:
+    - net.ipv6.conf.all.disable_ipv6
+    - net.ipv6.conf.default.disable_ipv6
+    - net.ipv6.conf.lo.disable_ipv6
+
+
+# - name: pre install system ruby
+#   apt: name={{item}} state=present
+#   with_items:
+#     - ruby
+
+- name: Set timezone.
+  copy:
+    content: '{{ timezone|default("UTC\n") }}'
+    dest: /etc/timezone
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+    - update timezone
+
+- name: Configure ntp.
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+
+- name: Start and enable ntp service.
+  service:
+    name: ntp
+    state: started
+    enabled: true
+
