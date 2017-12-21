@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+\cat install_roles.txt | grep -v "^$" | grep -v "#" | sort | uniq
