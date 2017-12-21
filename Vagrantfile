@@ -273,10 +273,10 @@ Vagrant.configure("2") do |config|
           # INFO: --uartmode<1-N> <arg>: This setting controls how VirtualBox connects a given virtual serial port (previously configured with the --uartX setting, see above) to the host on which the virtual machine is running. As described in detail in Section 3.10, “Serial ports”, for each such port, you can specify <arg> as one of the following options:
           # SOURCE: https://www.virtualbox.org/manual/ch08.html
           vb.customize ["modifyvm", :id, "--uartmode1", serialFile]
-          # vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-          # vb.customize ["modifyvm", :id, "--ioapic", "on"]
+          vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+          vb.customize ["modifyvm", :id, "--ioapic", "on"]
           # vb.customize ["modifyvm", :id, "--cpuexecutioncap", "75"]
-          # vb.customize ["modifyvm", :id, "--chipset", "ich9"]
+          vb.customize ["modifyvm", :id, "--chipset", "ich9"]
         end
       end
 
@@ -352,7 +352,6 @@ Vagrant.configure("2") do |config|
       ip = "172.17.10.#{i+100}"
       config.vm.network :private_network, ip: ip
 
-
       # config.vm.network "private_network", ip: box_ip
 
       # # set auto_update to false, if you do NOT want to check the correct
@@ -361,8 +360,6 @@ Vagrant.configure("2") do |config|
 
       # # do NOT download the iso file from a webserver
       # config.vbguest.no_remote = false
-
-      # config.vm.provision :shell, path: "install-ansible-dependencies.sh"
 
       # FIXME: Set this to a real path
       public_key = ENV['HOME'] + '/dev/vagrant-box/fedora/keys/vagrant.pub'
