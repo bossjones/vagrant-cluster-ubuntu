@@ -1,5 +1,14 @@
 ---
 - hosts: all
+  vars:
+    reg_expression:
+      - ".*hard.*memlock.*unlimited"
+      - ".*soft.*memlock.*unlimited"
+      - ".*hard.*nofile.*65536"
+    insertvalue:
+      - "* hard memlock unlimited"
+      - "* soft memlock unlimited"
+      - "* hard nofile 65536"
   become: yes
   become_method: sudo
   # vars_files:
@@ -39,3 +48,26 @@
       include_vars: "{{ item }}"
       with_first_found:
        - null.yml
+
+    - name: Install jq
+      apt: name=jq state=latest install_recommends=yes
+      become: yes
+
+    - lineinfile:
+        path: /etc/security/limits.conf
+        regexp: "{{item.0}}"
+        line: "{{item.1}}"
+        state: present
+        insertbefore: "^\\#\\*"
+      with_together:
+        - "{{reg_expression}}"
+        - "{{insertvalue}}"
+      become: yes
+
+    - lineinfile:
+        path: /etc/sysctl.conf
+        regexp: "^vm.max_map_count = 262144"
+        line: vm.max_map_count = 262144
+        state: present
+        insertbefore: EOF
+      become: yes

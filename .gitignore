@@ -45,3 +45,5 @@ roles/singleplatform-eng.users
 roles/williamyeh.oracle-java
 roles/yaegashi.blockinfile
 roles/zzet.rbenv
+roles/ANXS.build-essential
+roles/ANXS.git
