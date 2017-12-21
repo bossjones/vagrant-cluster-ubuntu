@@ -434,3 +434,18 @@ Vagrant.configure(2) do |config|
 end
 
 ```
+
+# Research
+
+- http://www.rsyslog.com/modern-syslogd/
+- https://www.rfaircloth.com/2017/02/10/building-perfect-syslog-collection-infrastructure/
+- https://rsyslog.readthedocs.io/en/latest/whitepapers/index.html
+- https://rsyslog.readthedocs.io/en/latest/whitepapers/syslog_protocol.html
+- https://rsyslog.readthedocs.io/en/latest/whitepapers/syslog_parsing.html
+- https://rsyslog.readthedocs.io/en/latest/whitepapers/queues_analogy.html
+- https://github.com/guilhemmarchand/nmon-logger/tree/master/vagrant-ansible-demo-rsyslog
+- https://www.corestack.io/blog/governing-log-ops-hybrid-cloud/
+- https://www.loggly.com/docs/troubleshooting-rsyslog/
+- http://www.rsyslog.com/doc/v8-stable/
+- https://www.loggly.com/docs/configure-syslog-script/
+- https://github.com/loggly/install-script/blob/master/Linux%20Script/configure-linux.sh
