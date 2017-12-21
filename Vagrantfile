@@ -25,6 +25,10 @@ $forwarded_ports = {}
 # FIX: "InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. For more information, see urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning. InsecurePlatformWarning"
 # SOURCE: https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04
 
+$fix_perm = <<SHELL
+sudo chmod 600 /home/vagrant/.ssh/id_rsa
+SHELL
+
 # SOURCE: https://github.com/bossjones/docker-swarm-vbox-lab/blob/master/Vagrantfile
 $docker_script = <<SHELL
 if [ -f /vagrant_bootstrap ]; then
@@ -384,34 +388,43 @@ Vagrant.configure("2") do |config|
 
       config.vm.provision :shell, inline: $docker_script
 
+      # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
+      config.vm.provision :file do |file|
+        file.source      = './keys/vagrant_id_rsa'
+        file.destination = '/home/vagrant/.ssh/id_rsa'
+      end
+
+      # fix permissions on private key file
+      config.vm.provision :shell, inline: $fix_perm
+
       # Only execute once the Ansible provisioner,
       # when all the machines are up and ready.
       current_i = "#{i}"
 
-      # if current_i == "#{$num_instances}"
+      if current_i == "#{$num_instances}"
 
-      #   # Run Ansible from the Vagrant Host
+        # Run Ansible from the Vagrant Host
 
-      #   config.vm.provision "ansible" do |ansible|
-      #     ansible.playbook = "playbook.yml"
-      #     ansible.verbose = "-v"
-      #     ansible.sudo = true
-      #     ansible.host_key_checking = false
-      #     ansible.limit = 'all'
-      #     # ansible.inventory_path = "provisioning/inventory"
-      #     ansible.inventory_path = "ubuntu-inventory"
-      #     # ansible.sudo = true
-      #     # ansible.extra_vars = {
-      #     #   public_key: public_key
-      #     # }
-      #     # Prevent intermittent connection timeout on ssh when provisioning.
-      #     # ansible.raw_ssh_args = ['-o ConnectTimeout=120']
-      #     # gist: https://gist.github.com/phantomwhale/9657134
-      #     # ansible.raw_arguments = Shellwords.shellsplit(ENV['ANSIBLE_ARGS']) if ENV['ANSIBLE_ARGS']
-      #     # CLI command.
-      #     # ANSIBLE_ARGS='--extra-vars "some_var=value"' vagrant up
-      #   end  # config.vm.provision "ansible" do |ansible|
-      # end  # if i == num_instances
+        config.vm.provision "ansible" do |ansible|
+          ansible.playbook = "playbook.yml"
+          ansible.verbose = "-v"
+          ansible.sudo = true
+          ansible.host_key_checking = false
+          ansible.limit = 'all'
+          # ansible.inventory_path = "provisioning/inventory"
+          ansible.inventory_path = "ubuntu-inventory"
+          # ansible.sudo = true
+          # ansible.extra_vars = {
+          #   public_key: public_key
+          # }
+          # Prevent intermittent connection timeout on ssh when provisioning.
+          # ansible.raw_ssh_args = ['-o ConnectTimeout=120']
+          # gist: https://gist.github.com/phantomwhale/9657134
+          # ansible.raw_arguments = Shellwords.shellsplit(ENV['ANSIBLE_ARGS']) if ENV['ANSIBLE_ARGS']
+          # CLI command.
+          # ANSIBLE_ARGS='--extra-vars "some_var=value"' vagrant up
+        end  # config.vm.provision "ansible" do |ansible|
+      end  # if i == num_instances
 
       ansible_inventory_dir = "ansible/hosts"
 
