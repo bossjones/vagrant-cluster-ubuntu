@@ -18,6 +18,13 @@
     - role: ansible-role-common
     # - ansible-role-maven
     - role: geerlingguy.docker
+    - role: singleplatform-eng.users
+      users:
+      - username: vagrant
+        groups: ['wheel','sudo', 'docker','adm']
+        append: yes
+        uid: 1000
+        home: /home/vagrant
     # - role: bossjones-ipv6
     # - role: ksylvan.docker
     # - role: motd
