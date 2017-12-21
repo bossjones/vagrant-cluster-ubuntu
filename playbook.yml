@@ -14,9 +14,10 @@
   # vars_files:
   #   - vars/main.yml
   roles:
-    - ansible-role-java
-    - ansible-role-common
+    - role: ansible-role-java
+    - role: ansible-role-common
     # - ansible-role-maven
+    - role: geerlingguy.docker
     # - role: bossjones-ipv6
     # - role: ksylvan.docker
     # - role: motd
