@@ -47,3 +47,5 @@ roles/yaegashi.blockinfile
 roles/zzet.rbenv
 roles/ANXS.build-essential
 roles/ANXS.git
+
+*.retry

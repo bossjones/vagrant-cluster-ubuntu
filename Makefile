@@ -1,6 +1,14 @@
+# include .mk
 
 SHELL=/bin/bash
 ELASTIC_REGISTRY ?= docker.elastic.co
+
+# source: https://github.com/ansible-city/aws_foundation/blob/cb7352ab84a0e437f1be8cebfab541af8df09c29/Makefile
+# ROLE_NAME ?= $(shell basename $$(pwd))
+# VENV ?= .venv
+
+# PATH := $(VENV)/bin:$(shell printenv PATH)
+# SHELL := env PATH=$(PATH) /bin/bash
 
 export PATH := ./bin:./venv/bin:$(PATH)
 
@@ -66,6 +74,10 @@ ci:
 
 bootstrap: venv
 
+# enter virtualenv so we can use Ansible
+activate:
+	. venv/bin/activate
+
 # The tests are written in Python. Make a virtualenv to handle the dependencies.
 venv: requirements.txt
 	@if [ -z $$PYTHON2 ]; then\
@@ -82,3 +94,35 @@ venv: requirements.txt
 	test -d venv || virtualenv --python=$$PYTHON2 venv;\
 	pip install -r requirements.txt;\
 	touch venv;\
+
+
+
+# # install dependencies in virtualenv
+# $(VENV):
+# 	@which virtualenv > /dev/null || (\
+# 		echo "please install virtualenv: http://docs.python-guide.org/en/latest/dev/virtualenvs/" \
+# 		&& exit 1 \
+# 	)
+# 	virtualenv $(VENV)
+# 	$(VENV)/bin/pip install -U "pip<9.0"
+# 	$(VENV)/bin/pip install pyopenssl urllib3[secure] requests[security]
+# 	$(VENV)/bin/pip install -r requirements.txt --ignore-installed
+# 	virtualenv --relocatable $(VENV)
+
+# ## Clean up
+# clean:
+# 	rm -f .make
+# 	rm -rf $(VENV)
+# 	rm -rf tests/roles
+
+# ## Prints this help
+# help:
+# 	@awk -v skip=1 \
+# 		'/^##/ { sub(/^[#[:blank:]]*/, "", $$0); doc_h=$$0; doc=""; skip=0; next } \
+# 		skip { next } \
+# 		/^#/ { doc=doc "\n" substr($$0, 2); next } \
+# 		/:/ { sub(/:.*/, "", $$0); printf "\033[34m%-30s\033[0m\033[1m%s\033[0m %s\n\n", $$0, doc_h, doc; skip=1 }' \
+# 		$(MAKEFILE_LIST)
+
+# .mk:
+# 	echo "" > .mk

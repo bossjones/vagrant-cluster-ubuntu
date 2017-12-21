@@ -310,3 +310,57 @@ export PS1='\[\033[1;34m\][\u@\h:\w]\$\[\033[0m\]'
 *You will have to log out and back in for these changes to take effect.
 
 After your done make a new AMI image and you should have a decently strong foundation for your application specific AMI’s. If your not making an image you may want to reboot the instance to ensure your changes took, specifically in the case of the fstab noatime.
+
+
+# Add to Makefile
+
+**source: https://github.com/voytek-solutions/aws-build/blob/7a867d0bfcf73cebb341d6b92d53d6b8f303e21b/Makefile**
+
+```
+## Lint Ansible roles
+lint:
+	find ansible/roles ansible/playbooks -name "*.yml" -print0 | xargs -n1 -0 -I{} \
+		ansible-lint \
+			-v \
+			--exclude=ansible/vendor \
+			{}
+
+## Builds and `ssh` to given machine.
+# Startup and (re)provision local VM and then `ssh` to it for given ROLE.
+# Example: make vagrant ROLE=example
+#          make vagrant ROLE=example MODE=configure
+vagrant: vagrant_build
+	vagrant ssh
+
+## Builds VM
+vagrant_build:
+	vagrant up --no-provision
+	MODE="$(MODE)" vagrant provision
+
+## Watch changes and rebuild local VM
+# Example: make watch ROLE=example
+vagrant_watch:
+	while sleep 1; do \
+		find ansible/ \
+			vagrant/ \
+			Vagrantfile \
+		| entr -d $(MAKE) lint vagrant_build ROLE=$(ROLE); \
+	done
+
+## Runs simple command on a given local VM.
+# Example: make vagrant_ssh ROLE=example
+#          make vagrant_status ROLE=example
+#          make vagrant_halt ROLE=example
+#          make vagrant_destroy ROLE=example
+vagrant_%:
+	MODE=$(MODE) vagrant $(subst vagrant_,,$@)
+
+## Clean up
+clean:
+	rm -rf ansible/vendor
+	rm -rf .venv
+
+# creates empty `.make` if it does not exist
+.make:
+	echo "" > .make
+```

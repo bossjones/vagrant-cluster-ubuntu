@@ -2,6 +2,8 @@
 # # vi: set ft=ruby :
 # https://github.com/hashicorp/vagrant/issues/8058
 
+# role = File.basename(File.expand_path(File.dirname(__FILE__)))
+
 require 'fileutils'
 
 Vagrant.require_version ">= 1.6.0"
@@ -16,13 +18,16 @@ $vm_memory = 2048
 $vm_cpus = 2
 $forwarded_ports = {}
 
+
+# FIX: "InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. For more information, see urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning. InsecurePlatformWarning"
+# SOURCE: https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04
+
 # SOURCE: https://github.com/bossjones/docker-swarm-vbox-lab/blob/master/Vagrantfile
 $docker_script = <<SHELL
 if [ -f /vagrant_bootstrap ]; then
    echo "vagrant_bootstrap EXISTS ALREADY"
    exit 0
 fi
-
 export DEBIAN_FRONTEND=noninteractive
 sudo apt-get autoremove -y && \
 sudo apt-get update -yqq && \
@@ -37,12 +42,22 @@ sudo apt-get install -yqq python-setuptools \
                    perl pkg-config \
                    python python-pip \
                    python-dev && \
+sudo fallocate -l 4G /swapfile && \
+sudo chmod 600 /swapfile && \
+sudo ls -lh /swapfile && \
+sudo mkswap /swapfile && \
+sudo swapon /swapfile && \
+sudo swapon -s && \
+free -m && \
 sudo easy_install --upgrade pip && \
 sudo easy_install --upgrade setuptools; \
 sudo pip install setuptools --upgrade && \
+sudo pip install urllib3[secure] && \
 sudo add-apt-repository -y ppa:git-core/ppa && \
 sudo add-apt-repository -y ppa:ansible/ansible && \
+sudo add-apt-repository ppa:chris-lea/python-urllib3 && \
 sudo apt-get update -yqq && \
+sudo apt-get install -yqq python-urllib3 && \
 sudo apt-get install -yqq git lsof strace ansible && \
 sudo mkdir -p /home/vagrant/ansible/{roles,group_vars,inventory}
 sudo chown -R vagrant:vagrant /home/vagrant/
@@ -386,6 +401,12 @@ Vagrant.configure("2") do |config|
           # ansible.extra_vars = {
           #   public_key: public_key
           # }
+          # Prevent intermittent connection timeout on ssh when provisioning.
+          # ansible.raw_ssh_args = ['-o ConnectTimeout=120']
+          # gist: https://gist.github.com/phantomwhale/9657134
+          # ansible.raw_arguments = Shellwords.shellsplit(ENV['ANSIBLE_ARGS']) if ENV['ANSIBLE_ARGS']
+          # CLI command.
+          # ANSIBLE_ARGS='--extra-vars "some_var=value"' vagrant up
         end
       end  # if i == num_instances
     end
