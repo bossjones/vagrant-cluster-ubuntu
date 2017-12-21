@@ -79,7 +79,7 @@
 
 - name: Set timezone.
   copy:
-    content: '{{ timezone|default("UTC\n") }}'
+    content: 'UTC'
     dest: /etc/timezone
     owner: root
     group: root

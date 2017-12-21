@@ -16,7 +16,7 @@
   roles:
     - ansible-role-java
     - ansible-role-common
-    - ansible-role-maven
+    # - ansible-role-maven
     # - role: bossjones-ipv6
     # - role: ksylvan.docker
     # - role: motd
