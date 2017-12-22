@@ -20,11 +20,19 @@ etcd_cmd: "{{ etcd_dir }}/etcd"
 etcd_user: root  # The user only applies to EL distros
 
 # Networking Variables
-etcd_interface: lo
+# eg. lo, eth1, docker0, etc
+# Interface on which etcd listens.
+# It is useful when you want define common network interface for etcd clusters and the interface is not connected to other machines (i.e. use same network interface for setup a etcd clusters),
+# for example as in Vagrant+VirtualBox configuration.
+# Note that this variable can't be set in per-host manner with current implementation.
+# If not specified, fact "ansible_default_ipv4.address" will be applied by every host itself.
+etcd_interface: ""
 etcd_client_interface: "{{ etcd_interface }}"
 etcd_peer_interface: "{{ etcd_interface }}"
 etcd_client_port: 2379
 etcd_peer_port: 2380
+etcd_client_legacy_port: 4001
+etcd_peer_legacy_port: 7001
 etcd_peers_group: etcd
 etcd_url_scheme: http
 etcd_client_url_scheme: "{{ etcd_url_scheme }}"
@@ -33,10 +41,32 @@ etcd_peer_url_scheme: "{{ etcd_url_scheme }}"
 etcd_initial_cluster_state: new
 etcd_initial_cluster_token: etcd-cluster-1
 
-etcd_initial_advertise_peer_urls: "{{ etcd_peer_url_scheme }}://{{ hostvars[inventory_hostname]['ansible_' + etcd_peer_interface]['ipv4']['address'] }}:{{ etcd_peer_port }}"
-etcd_listen_peer_urls: "{{ etcd_peer_url_scheme }}://{{ hostvars[inventory_hostname]['ansible_' + etcd_peer_interface]['ipv4']['address'] }}:{{ etcd_peer_port }}"
-etcd_advertise_client_urls: "{{ etcd_client_url_scheme }}://{{ hostvars[inventory_hostname]['ansible_' + etcd_client_interface]['ipv4']['address'] }}:{{ etcd_client_port }}"
-etcd_listen_client_urls: "{{ etcd_client_url_scheme }}://{{ hostvars[inventory_hostname]['ansible_' + etcd_client_interface]['ipv4']['address'] }}:{{ etcd_client_port }}"
+# docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
+# docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
+
+# # INFO: initial-advertise-peer-urls: "http://$private_ipv4:2380"
+# etcd_initial_advertise_peer_urls: "{{ etcd_peer_url_scheme }}://{{ hostvars[inventory_hostname]['ansible_' + etcd_peer_interface]['ipv4']['address'] }}:{{ etcd_peer_port }}"
+# # INFO: listen-peer-urls: "http://$private_ipv4:2380"
+# # etcd_listen_peer_urls: "{{ etcd_peer_url_scheme }}://{{ hostvars[inventory_hostname]['ansible_' + etcd_peer_interface]['ipv4']['address'] }}:{{ etcd_peer_port }}"
+# # NOTE: multi-region and multi-cloud deployments need to use $public_ipv4 Eg. advertise-client-urls: "http://$private_ipv4:2379"
+# etcd_advertise_client_urls: "{{ etcd_client_url_scheme }}://{{ hostvars[inventory_hostname]['ansible_' + etcd_client_interface]['ipv4']['address'] }}:{{ etcd_client_port }}"
+# # INFO: listen-client-urls: "http://0.0.0.0:2379"
+# # FIXME: Currently this will bind to actual ip instead of 0.0.0.0
+# etcd_listen_client_urls: "{{ etcd_client_url_scheme }}://{{ hostvars[inventory_hostname]['ansible_' + etcd_client_interface]['ipv4']['address'] }}:{{ etcd_client_port }}"
+
+# Borrowed from kubernetes etcd
+etcd_machine_address: "{% if etcd_interface != '' %}{{ hostvars[inventory_hostname]['ansible_' + etcd_interface].ipv4.address }}{%- else %}{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}{% endif %}"
+etcd_initial_advertise_peer_urls: "{{ etcd_peer_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_peer_port }}"
+etcd_listen_peer_urls: "{{ etcd_peer_url_scheme }}://0.0.0.0:{{ etcd_peer_port }}"
+etcd_advertise_client_urls: "{{ etcd_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_client_port }}"
+etcd_listen_client_urls: "{{ etcd_url_scheme }}://0.0.0.0:{{ etcd_client_port }}"
+
+# Remove etcd_listen_peer_legacy_urls, etcd_advertise_client_legacy_urls
+# and etcd_listen_client_legacy_url when https://github.com/contiv/netplugin/issues/323 is fixed
+etcd_listen_peer_legacy_urls: "{{ etcd_peer_url_scheme }}://0.0.0.0:{{ etcd_peer_port }},{{ etcd_peer_url_scheme }}://0.0.0.0:{{ etcd_peer_legacy_port }}"
+etcd_advertise_client_legacy_urls: "{{ etcd_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_client_port }},{{ etcd_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_client_legacy_port }}"
+etcd_listen_client_legacy_urls: "{{ etcd_url_scheme }}://0.0.0.0:{{ etcd_client_port }},{{ etcd_url_scheme }}://0.0.0.0:{{ etcd_client_legacy_port }}"
+
 
 etcd_client_cert_file: ~
 etcd_client_key_file: ~

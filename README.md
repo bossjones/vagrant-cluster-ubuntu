@@ -48,3 +48,4 @@ You can use the provided `mesosctl.yml` file to load the cluster configuration l
 
 # Thanks
 - https://github.com/mrlesmithjr/ansible-netdata
+- https://github.com/atosatto/ansible-dockerswarm/commit/69909b9ffeeb27a0d820af3f5f63de205c799583

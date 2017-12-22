@@ -106,7 +106,9 @@
     # source: https://github.com/peterrosell/etcd-rpi
     - role: bossjones.etcd
       etcd_daemon: "upstart"
-      etcd_interface: lo
+      etcd_interface: eth1
+      tags:
+      - etcd
     # - role: debops.netbox
 
 - hosts: docker_swarm_manager:docker_swarm_worker
@@ -130,7 +132,7 @@
   #   - vars/main.yml
   roles:
     # NOTE: NB: If you are installing Docker on a Raspberry running Raspbian or any other Debian-like OS make sure to set docker_dependencies: [ ] otherwise Ansible will fail because the linux-image-extra-virtual package is not available for the arm architecture (see issue #4).
-    - role: atosatto.docker-swarm
+    - role: bossjones.dockerswarm
       docker_swarm_interface: eth1
       docker_swarm_port: 2377
       # docker_swarm_network: 10.10.8.0/24
@@ -138,6 +140,8 @@
       skip_group: True
       skip_swarm: False
       skip_docker_py: True
+      tags:
+        - docker-swarm
 
 - hosts: netdata_registry
   vars:
