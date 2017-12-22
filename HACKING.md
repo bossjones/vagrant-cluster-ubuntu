@@ -449,3 +449,6 @@ end
 - http://www.rsyslog.com/doc/v8-stable/
 - https://www.loggly.com/docs/configure-syslog-script/
 - https://github.com/loggly/install-script/blob/master/Linux%20Script/configure-linux.sh
+
+
+# https://github.com/petro-rudenko/bigdata-toolbox/blob/master/Vagrantfile

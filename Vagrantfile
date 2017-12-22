@@ -85,6 +85,12 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "ubuntu/trusty64"
 
+  # config.vm.post_up_message = "Now you can get an access to https://localhost:8085 \n See login and password in secret/credentials/owncloud.local/owncloud/admin/"
+  # config.vm.define "owncloud.local"
+
+  # # This ensures that the locale is correctly set for Postgres
+  # config.vm.provision "shell", inline: 'update-locale LC_ALL="en_US.utf8"'
+
   # enable hostmanager
   config.hostmanager.enabled = true
 

@@ -33,6 +33,7 @@
     - role: debops.apt
     - role: debops.bootstrap
     - role: debops.core
+    - role: debops.debug
     # - role: debops.swapfile
     #   swapfile_size: '{{ 2 * ansible_memtotal_mb }}'
 
