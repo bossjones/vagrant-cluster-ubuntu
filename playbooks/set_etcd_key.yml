@@ -1,0 +1,119 @@
+
+# -*- coding: utf-8 -*-
+# USAGE: ansible-playbook -vvv set_etcd_key.yml -i hosts
+---
+##############################################################################
+# file: set_etcd_key.yml
+# Set an etcd key to something ( NOTE THIS IS MEANT TO BE RUN ON ONLY ONE HOST )
+#
+# Run with:
+#
+# Flush dynamic inventory cache:
+# ansible-playbook -vvv set_etcd_key.yml -i hosts --extra-vars "etcd_key=/images/nginx etcd_value=index.docker.io/behance/nginx:f4278a0bdd82efd13ce7751d33ceed0459506d62" --limit coreos_control[0] --flush-cache
+#
+# DRY RUN(with pause):
+# ansible-playbook -vvv set_etcd_key.yml -i hosts --extra-vars "etcd_key=/images/nginx etcd_value=index.docker.io/behance/nginx:f4278a0bdd82efd13ce7751d33ceed0459506d62" --limit coreos_control[0] --check
+#
+# REAL RUN(w/o pause):
+# ansible-playbook -vvv set_etcd_key.yml -i hosts --extra-vars "etcd_key=/images/nginx etcd_value=index.docker.io/behance/nginx:f4278a0bdd82efd13ce7751d33ceed0459506d62" --limit coreos_control[0] --skip-tags "pause"
+#
+# TAG LOOKUP:
+# ansible-playbook -vvv set_etcd_key.yml -i hosts --extra-vars "etcd_key=/images/nginx etcd_value=index.docker.io/behance/nginx:f4278a0bdd82efd13ce7751d33ceed0459506d62" --limit coreos_control[0] --tag lookup
+#
+# REAL RUN:
+# ansible-playbook -vvv set_etcd_key.yml -i hosts--extra-vars "etcd_key=/images/nginx etcd_value=index.docker.io/behance/nginx:f4278a0bdd82efd13ce7751d33ceed0459506d62" --limit coreos_control[0]
+#
+# NOTE: need to set environment variables before running! (dev, stage, prod)
+# Example: source ~/.aws/stage.sh
+#
+# Expected enviroment variables:
+# export AWS_ACCESS_KEY_ID
+# export AWS_SECRET_ACCESS_KEY
+# export AWS_DEFAULT_REGION="us-east-1"
+#
+##############################################################################
+
+- hosts: all
+  # FIXME: Since this is setting an etcd key, only need to set it once, duh
+  serial: 1
+  vars_prompt:
+    - name: "etcd_key"
+      prompt: "Etcd Key"
+      private: no
+    - name: "etcd_value"
+      prompt: "Etcd Value"
+      private: no
+
+  tasks:
+
+
+    - name: "Assert that etcd_key is defined"
+      assert:
+        that: "etcd_key is defined"
+        msg: >
+          "etcd_key isn't defined!"
+    - name: "Assert that etcd_value is defined"
+      assert:
+        that: "etcd_value is defined"
+        msg: >
+          "etcd_value isn't defined!"
+    - name: Check for single host
+      fail: msg="Single host check failed. THIS MEANS YOU'RE TRYING TO RUN THIS ON MULTIPLE MACHINES! DON'T! USE --limit <dynamic-label>[0]"
+      when: "{{ play_hosts|length }} != 1"
+
+    - name: "etcdctl get {{etcd_key}}"
+      shell: "etcdctl get {{etcd_key}}"
+      register: etcdctl_get_key
+      failed_when: etcdctl_get_key.rc != 0
+      check_mode: no
+      # Since this is just a command that looks up files on your system, don't mark it as a change everytime we run this
+      changed_when: False
+      tags:
+        - lookup
+
+    - name: "PRINT etcdctl_get_key - BEFORE"
+      debug:
+        msg: "{{ etcdctl_get_key }}"
+      when: etcdctl_get_key is defined
+      tags:
+        - lookup
+
+    - name: PAUSE BEFORE RUNNING ETCDCTL SET
+      pause:
+        minutes: 5
+      tags:
+      - pause
+
+    - name: "etcdctl set {{etcd_key}}"
+      shell: "etcdctl set {{etcd_key}} {{etcd_value}}"
+      register: etcdctl_set_value
+      failed_when: etcdctl_set_value.rc != 0
+      check_mode: no
+      # Since this is just a command that looks up files on your system, don't mark it as a change everytime we run this
+      changed_when: False
+      tags:
+        - lookup
+
+    - name: "PRINT etcdctl_set_value - BEFORE"
+      debug:
+        msg: "{{ etcdctl_set_value }}"
+      when: etcdctl_set_value is defined
+      tags:
+        - lookup
+
+    - name: "etcdctl get {{etcd_key}}"
+      shell: "etcdctl get {{etcd_key}}"
+      register: etcdctl_get_key
+      failed_when: etcdctl_get_key.rc != 0
+      check_mode: no
+      # Since this is just a command that looks up files on your system, don't mark it as a change everytime we run this
+      changed_when: False
+      tags:
+        - lookup
+
+    - name: "PRINT etcdctl_get_key - AFTER"
+      debug:
+        msg: "{{ etcdctl_get_key }}"
+      when: etcdctl_get_key is defined
+      tags:
+        - lookup

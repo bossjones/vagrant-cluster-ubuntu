@@ -64,6 +64,20 @@
     - role: debops.bootstrap
     - role: debops.core
     - role: debops.debug
+    # BORROWED A LOT OF LOGIC FROM https://github.com/retr0h/ansible-etcd
+    # FIXME: Lets grab something via etcd discovery
+    # FIXME: Lets grab something via etcd discovery
+    # FIXME: Lets grab something via etcd discovery
+    # FIXME: Lets grab something via etcd discovery
+    # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=5
+    # MUST CHANGE FOR EACH RUN OF THIS PLAYBOOK if any instances were created each time...
+    # discovery: "https://discovery.etcd.io/2fb2b6283dee1f133670435b6c5623b6"
+    # # multi-region and multi-cloud deployments need to use $public_ipv4
+    # advertise-client-urls: "http://$private_ipv4:2379"
+    # initial-advertise-peer-urls: "http://$private_ipv4:2380"
+    # # listen on official ports
+    # listen-client-urls: "http://0.0.0.0:2379"
+    # listen-peer-urls: "http://$private_ipv4:2380"
     # - { role: debops.ntp,                       tags: [ "role::ntp" ] }
     # - { role: debops.swapfile,                  tags: [ "role::swapfile" ] }
     # SOURCE: https://stackoverflow.com/questions/33505521/ansible-can-i-use-arithmetic-when-setting-a-variable-value
@@ -89,7 +103,9 @@
     #   completions:
     #     - git
     # - role: bossjones-cli-tools
-
+    - role: bossjones.etcd
+      etcd_daemon: "upstart"
+      etcd_interface: eth0
 
 - hosts: docker_swarm_manager:docker_swarm_worker
   gather_facts: yes
@@ -168,6 +184,9 @@
         line: "{{ hostvars[item]['ansible_default_ipv4']['address'] }} {{ hostvars[item].inventory_hostname }} {{ hostvars[item].inventory_hostname_short }}"
         state: present
       with_items: "{{ groups.all }}"
+
+    # - name: Gather facts now that prerequisite packages are installed
+    #   setup: filter=ansible_*
 
   # tasks:
   #     - name: reboot the system before install
