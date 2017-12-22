@@ -113,9 +113,9 @@
   roles:
     # NOTE: NB: If you are installing Docker on a Raspberry running Raspbian or any other Debian-like OS make sure to set docker_dependencies: [ ] otherwise Ansible will fail because the linux-image-extra-virtual package is not available for the arm architecture (see issue #4).
     - role: atosatto.docker-swarm
-      # docker_swarm_interface: eth1
-      # docker_swarm_port: 2377
-      # docker_swarm_network: 10.10.8.0/24
+      docker_swarm_interface: eth1
+      docker_swarm_port: 2377
+      docker_swarm_network: 10.10.8.0/24
       skip_engine: True
       skip_group: True
       skip_swarm: False

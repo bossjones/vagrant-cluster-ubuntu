@@ -199,6 +199,10 @@ Vagrant.configure("2") do |config|
       ip = "172.17.10.#{i+100}"
       config.vm.network :private_network, ip: ip
 
+      # FIXME: Needed for docker-swarm??????? 12/22/2017
+      # SOURCE: https://github.com/ball6847/ansible-gitlab-ci/blob/9c90c8c7e5852b4a9982bb8f7dcfc45951ea6802/Vagrantfile
+      # config.vm.network "public_network", bridge: "enp1s0"
+
       # config.vm.network "private_network", ip: box_ip
 
       # # set auto_update to false, if you do NOT want to check the correct
