@@ -1,4 +1,16 @@
 ---
+# SOURCE: https://github.com/tIsGoud/Docker-Swarm-deployed-with-Ansible/blob/master/site.yml
+# This playbook deploys the swarm configuration on multiple Docker hosts
+# Determine the processor architecture of the machines defined in the inventory
+- name: Determine the processor of the target platform
+  hosts: all
+  tasks:
+    - set_fact: architecture="{{ ((ansible_architecture|truncate(3,true,'')) == 'arm') | ternary('ARM','X86') }}"
+
+- hosts: all
+  tasks:
+    - debug: msg="architecture is set to {{ architecture }}"
+
 - hosts: all
   vars:
     reg_expression:
@@ -36,8 +48,9 @@
     - role: debops.debug
     # - { role: debops.ntp,                       tags: [ "role::ntp" ] }
     # - { role: debops.swapfile,                  tags: [ "role::swapfile" ] }
-    # - role: debops.swapfile
-    #   swapfile_size: '{{ 2 * ansible_memtotal_mb }}'
+    # SOURCE: https://stackoverflow.com/questions/33505521/ansible-can-i-use-arithmetic-when-setting-a-variable-value
+    - role: debops.swapfile
+      swapfile_size: '{{ 2 * ansible_memtotal_mb }}'
     # - role: bossjones.ufw
 
     # - role: bossjones-ipv6
@@ -59,12 +72,28 @@
     #     - git
     # - role: bossjones-cli-tools
 
+
+- hosts: docker_swarm_manager:docker_swarm_worker
+  become: yes
+  become_method: sudo
+  # vars_files:
+  #   - vars/main.yml
+  roles:
+    # NOTE: NB: If you are installing Docker on a Raspberry running Raspbian or any other Debian-like OS make sure to set docker_dependencies: [ ] otherwise Ansible will fail because the linux-image-extra-virtual package is not available for the arm architecture (see issue #4).
+    - role: atosatto.docker-swarm
+      # docker_swarm_interface: eth1
+      # docker_swarm_port: 2377
+      # docker_swarm_network: 10.10.8.0/24
+      skip_engine: True
+      skip_group: True
+      skip_swarm: False
+      skip_docker_py: True
+
   pre_tasks:
 
     # source: https://github.com/pascalandy/tutorial-do/blob/master/ansible/site.yml
     # - name: 'install python2'
     #   raw: apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade && apt-get -y install python-simplejson
-
 
     - name: Fail if Ansible is ancient
       fail: msg="We need Ansible >= 2.0. Please update your kit. 'pip install -U Ansible'"
@@ -99,6 +128,14 @@
         state: present
         insertbefore: EOF
       become: yes
+
+    # SOURCE: https://github.com/idegard/ansible-simple-swarm/blob/8272763a350d88b64380160af2512f8d271055c1/basic.yml
+    - name: Esure IP address of all hosts to all hosts
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ hostvars[item]['ansible_default_ipv4']['address'] }} {{ hostvars[item].inventory_hostname }} {{ hostvars[item].inventory_hostname_short }}"
+        state: present
+      with_items: "{{ groups.all }}"
 
   # tasks:
   #     - name: reboot the system before install

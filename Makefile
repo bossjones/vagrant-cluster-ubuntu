@@ -19,7 +19,7 @@ __check_defined = \
     $(if $(value $1),, \
       $(error Undefined $1$(if $(value 2), ($(strip $2)))))
 
-list_allowed_args := name
+list_allowed_args := name inventory
 
 export PATH := ./bin:./venv/bin:$(PATH)
 
@@ -151,3 +151,7 @@ ansible-lint-bossjones-roles:
 
 yamllint-bossjones-roles:
 	bash -c "find ./roles/bossjones.* -type f -name '*.y*ml' -print0 | xargs -I FILE -t -0 -n1 yamllint FILE"
+
+ping:
+	$(call check_defined, inventory, Please set inventory)
+	@ansible-playbook -i $(inventory) ping.yml

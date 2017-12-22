@@ -1,5 +1,5 @@
 ---
 # defaults file for bossjones.ufw
 
-- name: restart ufw
-  service: name=ufw state=restarted
+# - name: restart ufw
+#   service: name=ufw state=restarted

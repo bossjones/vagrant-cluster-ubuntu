@@ -1,0 +1,8 @@
+---
+# SOURCE: https://rsmitty.github.io/Multi-Cloud-Swarm/
+# EG. ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -b -i swarm-inventory swarm-destroy.yml
+- name: Leave Swarm
+  hosts: docker_swarm_manager:docker_swarm_worker
+  gather_facts: yes
+  tasks:
+    - command: "docker swarm leave --force"

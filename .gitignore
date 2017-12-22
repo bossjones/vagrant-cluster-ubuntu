@@ -53,5 +53,6 @@ roles/debops.core
 roles/debops.secret
 roles/debops.users
 roles/debops.debug
+roles/debops.swapfile
 
 *.retry

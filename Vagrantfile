@@ -97,6 +97,11 @@ Vagrant.configure("2") do |config|
   # configure the host's /etc/hosts
   config.hostmanager.manage_host = true
 
+  # FIXME: ENABLE ME
+  # SOURCE: https://github.com/tIsGoud/Docker-Swarm-deployed-with-Ansible
+  # config.vbguest.auto_update = true
+  # config.vbguest.no_remote = true
+
   (1..$num_instances).each do |i|
     config.vm.define vm_name = "%s-%02d" % [$instance_name_prefix, i] do |config|
       config.vm.hostname = vm_name

@@ -79,3 +79,11 @@ debops.bootstrap
 debops.core
 debops.users
 debops.debug
+debops.swapfile
+
+atosatto.docker-swarm
+
+# FIXME: Get this
+# source: https://github.com/idegard/ansible-simple-swarm/blob/8272763a350d88b64380160af2512f8d271055c1/requirements.yml
+# https://github.com/idegard/role-secure-docker-daemon
+

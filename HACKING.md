@@ -452,3 +452,11 @@ end
 
 
 # https://github.com/petro-rudenko/bigdata-toolbox/blob/master/Vagrantfile
+
+
+# Custom Facts in ansible
+
+- https://medium.com/@jezhalford/ansible-custom-facts-1e1d1bf65db8
+- http://serverascode.com/2015/01/27/ansible-custom-facts.html
+- https://docs.ansible.com/ansible/latest/setup_module.html
+-
