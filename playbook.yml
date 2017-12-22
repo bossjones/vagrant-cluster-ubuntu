@@ -106,7 +106,7 @@
     # source: https://github.com/peterrosell/etcd-rpi
     - role: bossjones.etcd
       etcd_daemon: "upstart"
-      etcd_interface: eth0
+      etcd_interface: lo
     # - role: debops.netbox
 
 - hosts: docker_swarm_manager:docker_swarm_worker

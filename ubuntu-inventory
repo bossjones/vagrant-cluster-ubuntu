@@ -12,6 +12,8 @@ ubuntu-03 ansible_ssh_host=172.17.10.103 ip=172.17.10.103 ansible_ssh_port=22 an
 # fatal: [ubuntu-03]: FAILED! => {"changed": false, "failed": true, "msg": "AnsibleUndefinedVariable: 'dict object' has no attribute u'etcd'"}
 [etcd]
 ubuntu-01
+ubuntu-02
+ubuntu-03
 
 [dev_servers]
 ubuntu-01
