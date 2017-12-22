@@ -460,3 +460,17 @@ end
 - http://serverascode.com/2015/01/27/ansible-custom-facts.html
 - https://docs.ansible.com/ansible/latest/setup_module.html
 -
+
+
+# To deug tomorrow
+
+```
+WARNING: No memory limit support
+WARNING: No swap limit support
+WARNING: No kernel memory limit support
+WARNING: No oom kill disable support
+WARNING: No cpu cfs quota support
+WARNING: No cpu cfs period support
+WARNING: No cpu shares support
+WARNING: No cpuset support
+```

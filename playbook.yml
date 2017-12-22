@@ -4,10 +4,28 @@
 # Determine the processor architecture of the machines defined in the inventory
 - name: Determine the processor of the target platform
   hosts: all
+  vars:
+    reg_expression:
+      - ".*hard.*memlock.*unlimited"
+      - ".*soft.*memlock.*unlimited"
+      - ".*hard.*nofile.*65536"
+    insertvalue:
+      - "* hard memlock unlimited"
+      - "* soft memlock unlimited"
+      - "* hard nofile 65536"
   tasks:
     - set_fact: architecture="{{ ((ansible_architecture|truncate(3,true,'')) == 'arm') | ternary('ARM','X86') }}"
 
 - hosts: all
+  vars:
+    reg_expression:
+      - ".*hard.*memlock.*unlimited"
+      - ".*soft.*memlock.*unlimited"
+      - ".*hard.*nofile.*65536"
+    insertvalue:
+      - "* hard memlock unlimited"
+      - "* soft memlock unlimited"
+      - "* hard nofile 65536"
   tasks:
     - debug: msg="architecture is set to {{ architecture }}"
 
@@ -74,8 +92,22 @@
 
 
 - hosts: docker_swarm_manager:docker_swarm_worker
+  gather_facts: yes
+  vars:
+    reg_expression:
+      - ".*hard.*memlock.*unlimited"
+      - ".*soft.*memlock.*unlimited"
+      - ".*hard.*nofile.*65536"
+    insertvalue:
+      - "* hard memlock unlimited"
+      - "* soft memlock unlimited"
+      - "* hard nofile 65536"
+  # SOURCE: https://github.com/ball6847/ansible-gitlab-ci/blob/9c90c8c7e5852b4a9982bb8f7dcfc45951ea6802/swarm.yml
+  serial: 1
   become: yes
   become_method: sudo
+  tags:
+    - docker_swarm
   # vars_files:
   #   - vars/main.yml
   roles:
