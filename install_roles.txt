@@ -80,6 +80,7 @@ debops.core
 debops.users
 debops.debug
 debops.swapfile
+debops.netbox
 
 atosatto.docker-swarm
 

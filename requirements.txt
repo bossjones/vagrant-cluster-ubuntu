@@ -3,3 +3,8 @@ yolk3k
 docker-py
 molecule --pre
 yamllint
+
+# etcd module
+# https://github.com/modcloth-labs/ansible-module-etcd
+requests >= 2.4
+python-etcd >= 0.3.2

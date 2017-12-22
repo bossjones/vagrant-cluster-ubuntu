@@ -5,7 +5,7 @@ bossjones__user: vagrant
 bossjones__group: vagrant
 
 # List of APT packages required by bossjones on Ansible Controller.
-bossjones__base_packages: [ 'python-netaddr', 'python-passlib', 'uuid-runtime', 'python-setuptools' ]
+bossjones__base_packages: [ 'python-netaddr', 'python-passlib', 'uuid-runtime', 'python-setuptools', 'vim-nox' ]
 
 # Ansible should be installed using APT, but available packages might be too
 # old. If you want to install Ansible by other means, you can disable the APT

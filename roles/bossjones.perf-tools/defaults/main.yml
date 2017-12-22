@@ -1,5 +1,7 @@
 ---
 # defaults file for bossjones.perf-tools
 
+# TODO: Check out this: https://github.com/bossjones/boss-toolbox/blob/master/Dockerfile
+
 # List of APT packages required by bossjones.perf-tools on Ansible Controller.
 bossjones__perf_packages: [ 'lsof', 'strace', 'nmap', 'dnsutils', 'netcat', 'net-tools', 'nmap', 'tcpdump', 'htop', 'mtr', 'iotop', 'iftop', 'hdparm', 'dstat', 'iproute' ]

@@ -102,10 +102,12 @@
     #   completions:
     #     - git
     # - role: bossjones-cli-tools
+    # TODO: Create a playbook bossjones.etcd-rpi
+    # source: https://github.com/peterrosell/etcd-rpi
     - role: bossjones.etcd
       etcd_daemon: "upstart"
       etcd_interface: eth0
-    - role: debops.debug
+    # - role: debops.netbox
 
 - hosts: docker_swarm_manager:docker_swarm_worker
   gather_facts: yes
@@ -136,6 +138,58 @@
       skip_group: True
       skip_swarm: False
       skip_docker_py: True
+
+- hosts: netdata_registry
+  vars:
+    reg_expression:
+      - ".*hard.*memlock.*unlimited"
+      - ".*soft.*memlock.*unlimited"
+      - ".*hard.*nofile.*65536"
+    insertvalue:
+      - "* hard memlock unlimited"
+      - "* soft memlock unlimited"
+      - "* hard nofile 65536"
+    netdata_registry_enabled: true
+    # FIXME: DONT HARDCODE IPS. Make this configurable or dynamic.
+    netdata_registry_to_announce: 'http://172.17.10.101:{{ netdata_default_port }}'
+    # pri_domain_name: 'test.vagrant.local'
+  roles:
+    # - role: ansible-nodejs
+    # - role: ansible-fail2ban
+    # - role: ansible-nginx
+    - role: bossjones.netdata
+
+- hosts: netdata:!netdata_registry
+  vars:
+    reg_expression:
+      - ".*hard.*memlock.*unlimited"
+      - ".*soft.*memlock.*unlimited"
+      - ".*hard.*nofile.*65536"
+    insertvalue:
+      - "* hard memlock unlimited"
+      - "* soft memlock unlimited"
+      - "* hard nofile 65536"
+    netdata_registry_enabled: false
+    netdata_registry_to_announce: 'http://172.17.10.101:{{ netdata_default_port }}'
+    # pri_domain_name: 'test.vagrant.local'
+  roles:
+    # - role: ansible-nodejs
+    # - role: ansible-fail2ban
+    # - role: ansible-nginx
+    - role: bossjones.netdata
+
+- hosts: all
+  vars:
+    reg_expression:
+      - ".*hard.*memlock.*unlimited"
+      - ".*soft.*memlock.*unlimited"
+      - ".*hard.*nofile.*65536"
+    insertvalue:
+      - "* hard memlock unlimited"
+      - "* soft memlock unlimited"
+      - "* hard nofile 65536"
+  roles:
+    - role: debops.debug
 
   pre_tasks:
 

@@ -18,6 +18,14 @@ ubuntu-01
 ubuntu-02
 ubuntu-03
 
+[netdata_registry]
+ubuntu-01
+
+[netdata]
+ubuntu-01
+ubuntu-02
+ubuntu-03
+
 [ubuntues]
 ubuntu-0[1:3]
 
