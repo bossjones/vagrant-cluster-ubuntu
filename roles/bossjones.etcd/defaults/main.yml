@@ -39,7 +39,7 @@ etcd_client_url_scheme: "{{ etcd_url_scheme }}"
 etcd_peer_url_scheme: "{{ etcd_url_scheme }}"
 
 etcd_initial_cluster_state: new
-etcd_initial_cluster_token: etcd-cluster-1
+etcd_initial_cluster_token: etcd-cluster-2
 
 # docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
 # docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"

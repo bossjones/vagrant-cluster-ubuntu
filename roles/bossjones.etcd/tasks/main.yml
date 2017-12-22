@@ -49,3 +49,11 @@
   notify:
     - Reload systemd
     - Restart etcd
+
+# SOURCE: https://stackoverflow.com/questions/12399002/how-to-configure-git-bash-command-line-completion
+- name: bash completion etcdctl
+  copy: src=etcdctl_bash_completion
+        dest=/usr/share/bash-completion/completions/etcdctl
+        mode=0644
+        owner=root
+        group=root
