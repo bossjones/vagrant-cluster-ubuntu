@@ -59,7 +59,7 @@
     - role: bossjones.bootstrap
     - role: bossjones.python
     # - role: bossjones.ansible-vagrant-setup
-    # - role: bossjones.perf-tools
+    - role: bossjones.perf-tools
     - role: debops.apt
     - role: debops.bootstrap
     - role: debops.core
@@ -115,7 +115,7 @@
     - role: atosatto.docker-swarm
       docker_swarm_interface: eth1
       docker_swarm_port: 2377
-      docker_swarm_network: 10.10.8.0/24
+      # docker_swarm_network: 10.10.8.0/24
       skip_engine: True
       skip_group: True
       skip_swarm: False

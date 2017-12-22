@@ -21,6 +21,35 @@ $vm_memory = 2048
 $vm_cpus = 2
 $forwarded_ports = {}
 
+###############################################################
+# FIXME: We can use this to make a dynamic inventory 12/22/2017
+# SOURCE: https://github.com/tdi/vagrant-docker-swarm/blob/master/Vagrantfile
+###############################################################
+# auto = ENV['AUTO_START_SWARM'] || false
+# # Increase numworkers if you want more than 3 nodes
+# numworkers = 2
+
+# # VirtualBox settings
+# # Increase vmmemory if you want more than 512mb memory in the vm's
+# vmmemory = 512
+# # Increase numcpu if you want more cpu's per vm
+# numcpu = 1
+
+# instances = []
+
+# (1..numworkers).each do |n|
+#   instances.push({:name => "worker#{n}", :ip => "192.168.10.#{n+2}"})
+# end
+
+# manager_ip = "192.168.10.2"
+
+# File.open("./hosts", 'w') { |file|
+#   instances.each do |i|
+#     file.write("#{i[:ip]} #{i[:name]} #{i[:name]}\n")
+#   end
+# }
+###############################################################
+
 
 # FIX: "InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. For more information, see urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning. InsecurePlatformWarning"
 # SOURCE: https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04
@@ -201,7 +230,7 @@ Vagrant.configure("2") do |config|
 
       # FIXME: Needed for docker-swarm??????? 12/22/2017
       # SOURCE: https://github.com/ball6847/ansible-gitlab-ci/blob/9c90c8c7e5852b4a9982bb8f7dcfc45951ea6802/Vagrantfile
-      # config.vm.network "public_network", bridge: "enp1s0"
+      # config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)"
 
       # config.vm.network "private_network", ip: box_ip
 
