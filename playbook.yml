@@ -21,10 +21,21 @@
     - role: singleplatform-eng.users
       users:
       - username: vagrant
-        groups: ['wheel','sudo', 'docker','adm']
+        # 'wheel', - BSD
+        groups: ['sudo', 'docker','adm']
         append: yes
         uid: 1000
         home: /home/vagrant
+    - role: bossjones.bootstrap
+    - role: bossjones.python
+    # - role: bossjones.ansible-vagrant-setup
+    # - role: bossjones.perf-tools
+    - role: debops.apt
+    - role: debops.bootstrap
+    - role: debops.core
+    # - role: debops.swapfile
+    #   swapfile_size: '{{ 2 * ansible_memtotal_mb }}'
+
     # - role: bossjones-ipv6
     # - role: ksylvan.docker
     # - role: motd

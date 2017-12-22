@@ -1,0 +1,43 @@
+---
+# tasks file for bossjones.python
+
+- name: Make sure the bossjones__base_python_packages packages are installed (Debian)
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items: "{{bossjones__base_python_packages}}"
+  become: true
+
+- name: easy_install pip==1.2.1
+  command: "easy_install pip==1.2.1"
+  tags:
+  - pip
+  - easy_install
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'trusty'
+
+
+- name: download ez_setup.py
+  get_url: url=https://bootstrap.pypa.io/ez_setup.py dest=/usr/install/ez_setup.py  mode=0644
+
+- name: download get-pip.py
+  get_url: url=https://bootstrap.pypa.io/get-pip.py dest=/usr/install/get-pip.py  mode=0644
+
+# - name: python2 setuptools==26.0.0 and pip==8.1.2
+#   command: "python2 /usr/install/ez_setup.py"
+#   become: true
+#   args:
+#     chdir: /root
+#   tags:
+#   - pip
+#   - easy_install
+#   when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'xenial'
+
+# - name: python2 pip==8.1.2
+#   command: "python2 /usr/install/get-pip.py"
+#   become: true
+#   args:
+#     chdir: /root
+#   tags:
+#   - pip
+#   - easy_install
+#   when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'xenial'

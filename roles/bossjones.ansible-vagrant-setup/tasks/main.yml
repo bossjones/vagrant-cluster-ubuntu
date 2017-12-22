@@ -1,0 +1,44 @@
+---
+# tasks file for bossjones.ansible-vagrant-setup
+
+- name: create /home/{{bossjones__user}}/ansible/{{item}}
+  file: path=/home/{{bossjones__user}}/ansible/{{item}}
+        state=directory
+        mode=0755
+        recurse=yes
+        owner="{{bossjones__user}}"
+        group="{{bossjones__group}}"
+  with_items:
+  - roles
+  - group_vars
+  - inventory
+
+- name: Install ansible file {{item}}
+  copy: src="{{item}}"
+        dest=/home/{{bossjones__user}}/ansible/{{item}}
+        mode=0644
+        owner="{{bossjones__user}}"
+        group="{{bossjones__group}}"
+  with_items:
+  - ansible.cfg
+  - galaxy.txt
+  - hosts
+
+- name: git clone {{item.repo}}
+  git:
+    repo: "{{item.repo}}"
+    # /home/vagrant/ansible/roles
+    dest: "/home/{{bossjones__user}}/ansible/{{item.folder}}"
+    version: master
+    update: no
+  with_item:
+    - "{{ bossjones__git_repo_ansible_vagrant }}"
+  when: item|d()
+
+- name: run ansible playbook on vagrant box
+  shell: ansible-playbook -i hosts playbook.yml
+  args:
+    chdir: '/home/{{bossjones__user}}/ansible'
+  changed_when: False
+  check_mode: no
+

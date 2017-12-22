@@ -1,0 +1,5 @@
+---
+# defaults file for bossjones.python
+
+# List of APT packages required by bossjones on Ansible Controller.
+bossjones__base_python_packages: [ 'python-netaddr', 'python-passlib', 'uuid-runtime', 'python-setuptools', 'libpython2.7', 'python-dev' ]

@@ -12,7 +12,7 @@ require 'fileutils'
 Vagrant.require_version ">= 1.6.0"
 
 # Defaults for config options defined in CONFIG
-$num_instances = 2
+$num_instances = 3
 $instance_name_prefix = "ubuntu"
 $enable_serial_logging = false
 $share_home = false
@@ -49,198 +49,12 @@ sudo apt-get install -yqq python-setuptools \
                    perl pkg-config \
                    python python-pip \
                    python-dev && \
-sudo fallocate -l 4G /swapfile && \
-sudo chmod 600 /swapfile && \
-sudo ls -lh /swapfile && \
-sudo mkswap /swapfile && \
-sudo swapon /swapfile && \
-sudo swapon -s && \
-free -m && \
-sudo easy_install --upgrade pip && \
-sudo easy_install --upgrade setuptools; \
-sudo pip install setuptools --upgrade && \
-sudo pip install urllib3[secure] && \
 sudo add-apt-repository -y ppa:git-core/ppa && \
 sudo add-apt-repository -y ppa:ansible/ansible && \
 sudo add-apt-repository ppa:chris-lea/python-urllib3 && \
 sudo apt-get update -yqq && \
 sudo apt-get install -yqq python-urllib3 && \
-sudo apt-get install -yqq git lsof strace ansible && \
-sudo mkdir -p /home/vagrant/ansible/{roles,group_vars,inventory}
-sudo chown -R vagrant:vagrant /home/vagrant/
-cat << EOF > /home/vagrant/ansible/ansible.cfg
-[defaults]
-# Modern servers come and go too often for host key checking to be useful
-roles_path = ./roles
-system_errors = False
-host_key_checking = False
-ask_sudo_pass = False
-retry_files_enabled = False
-gathering = smart
-force_handlers = True
-[privilege_escalation]
-# Nearly everything requires sudo, so default on
-become = True
-[ssh_connection]
-# Speeds things up, but requires disabling requiretty in /etc/sudoers
-pipelining = True
-EOF
-cat << EOF > /home/vagrant/ansible/playbook.yml
----
-- hosts: all
-  become: yes
-  become_method: sudo
-  vars:
-    ulimit_config:
-      - domain: '*'
-        type: soft
-        item: nofile
-        value: 64000
-      - domain: '*'
-        type: hard
-        item: nofile
-        value: 64000
-  roles:
-    - role: ulimit
-    - role: sysctl-performance
-EOF
-cat << EOF > /home/vagrant/ansible/hosts
-localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python2
-EOF
-cat << EOF > /home/vagrant/ansible/galaxy.txt
-debops.ansible_plugins
-debops.apache
-debops.apt
-debops.apt_cacher_ng
-debops.apt_install
-debops.apt_listchanges
-debops.apt_preferences
-debops.apt_proxy
-debops.atd
-debops.auth
-debops.authorized_keys
-debops.avahi
-debops.backporter
-debops.bootstrap
-debops.boxbackup
-debops.console
-debops.core
-debops.cron
-debops.cryptsetup
-debops.debops
-debops.debops_api
-debops.debops_fact
-debops.dhcpd
-debops.dhparam
-debops.dnsmasq
-debops.docker
-debops.docker_gen
-debops.dokuwiki
-debops.dovecot
-debops.elastic_co
-debops.elasticsearch
-debops.environment
-debops.etc_aliases
-debops.etc_services
-debops.etherpad
-debops.fail2ban
-debops.fcgiwrap
-debops.ferm
-debops.gitlab
-debops.gitlab_ci
-debops.gitlab_ci_runner
-debops.gitlab_runner
-debops.gitusers
-debops.golang
-debops.grub
-debops.gunicorn
-debops.hashicorp
-debops.hwraid
-debops.ifupdown
-debops.ipxe
-debops.iscsi
-debops.java
-debops.kibana
-debops.kvm
-debops.librenms
-debops.libvirt
-debops.libvirtd
-debops.libvirtd_qemu
-debops.logrotate
-debops.lvm
-debops.lxc
-debops.mailman
-debops.mariadb
-debops.mariadb_server
-debops.memcached
-debops.monit
-debops.monkeysphere
-debops.mosquitto
-debops.mysql
-debops.netbox
-debops.nfs
-debops.nfs_server
-debops.nginx
-debops.nodejs
-debops.nsswitch
-debops.ntp
-debops.nullmailer
-debops.opendkim
-debops.openvz
-debops.owncloud
-debops.persistent_paths
-debops.php
-debops.php5
-debops.phpipam
-debops.phpmyadmin
-debops.pki
-debops.postconf
-debops.postfix
-debops.postgresql
-debops.postgresql_server
-debops.postscreen
-debops.postwhite
-debops.preseed
-debops.rabbitmq_management
-debops.rabbitmq_server
-debops.radvd
-debops.rails_deploy
-debops.redis
-debops.reprepro
-debops.resources
-debops.root_account
-debops.rsnapshot
-debops.rstudio_server
-debops.rsyslog
-debops.ruby
-debops.salt
-debops.samba
-debops.saslauthd
-debops.secret
-debops.sftpusers
-debops.sks
-debops.slapd
-debops.smstools
-debops.snmpd
-debops.sshd
-debops.stunnel
-debops.swapfile
-debops.sysctl
-debops.tcpwrappers
-debops.tftpd
-debops.tgt
-debops.tinc
-debops.unattended_upgrades
-debops.unbound
-debops.users
-EOF
-cd /home/vagrant/ansible/roles && \
-git clone https://github.com/KAMI911/ansible-role-sysctl-performance sysctl-performance && \
-git clone https://github.com/picotrading/ansible-ulimit ulimit && \
-git clone https://github.com/dev-sec/ansible-os-hardening.git ansible-os-hardening && \
-cd /home/vagrant/ansible && \
-ansible-playbook -i hosts playbook.yml && \
-cd /home/vagrant && \
+sudo apt-get install -yqq git ansible && \
 sudo chown -R vagrant:vagrant /home/vagrant/ && \
 sudo touch /vagrant_bootstrap && \
 sudo chown vagrant:vagrant /vagrant_bootstrap

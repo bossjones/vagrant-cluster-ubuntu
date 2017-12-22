@@ -1,0 +1,65 @@
+---
+# tasks file for bossjones.bootstrap
+
+- name: make apt use ipv4 instead of ipv6
+  lineinfile: dest=/etc/gai.conf regexp='^#precedence ::ffff:0:0/96  100' line='precedence ::ffff:0:0/96  100'
+
+- name: update system locales
+  copy: src=etc/profile.d/locales.sh
+        dest=/etc/profile.d/locales.sh
+        mode=0755
+        owner=root
+        group=root
+
+- name: Install required packages
+  apt:
+    name: '{{ item }}'
+    state: 'present'
+    install_recommends: False
+  with_flattened:
+    - [ 'git', 'python-pip' ]
+    - '{{ bossjones__base_packages }}'
+    - '{{ bossjones__ansible_packages }}'
+    - '{{ bossjones__packages }}'
+  when: item|d()
+
+- name: Disable multiarch support for ubuntu
+  command: dpkg --remove-architecture i386
+  changed_when: False
+  check_mode: no
+
+- name: update cache again
+  apt: update_cache=yes
+  become: true
+
+- name: Install aptitude packages via apt
+  apt: pkg={{ item }} state=present
+  with_items:
+  - aptitude
+  become: true
+
+- name: Run Aptitude Upgrade
+  apt: update_cache=yes force=yes upgrade=yes
+
+- name: install kernel headers
+  apt: pkg=linux-headers-{{ ansible_kernel }}
+
+- name: Add git-core repo PPA
+  apt_repository: repo='ppa:git-core/ppa' state=present update_cache=yes
+  become: true
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'trusty'
+
+- name: Install git packages via apt
+  apt: pkg={{ item }} state=latest
+  with_items:
+  - git
+  - bash-completion
+  become: true
+
+- name: create /usr/install
+  file: path=/usr/install
+        state=directory
+        mode=0755
+        recurse=yes
+        owner="{{bossjones__user}}"
+        group="{{bossjones__group}}"

@@ -1,0 +1,9 @@
+---
+# tasks file for bossjones.perf-tools
+
+- name: Make sure the bossjones__perf_packages packages are installed (Debian)
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items: "{{bossjones__perf_packages}}"
+  become: true

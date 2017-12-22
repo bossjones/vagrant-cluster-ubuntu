@@ -1,0 +1,20 @@
+---
+# defaults file for bossjones.bootstrap
+
+bossjones__user: vagrant
+bossjones__group: vagrant
+
+# List of APT packages required by bossjones on Ansible Controller.
+bossjones__base_packages: [ 'python-netaddr', 'python-passlib', 'uuid-runtime', 'python-setuptools' ]
+
+# Ansible should be installed using APT, but available packages might be too
+# old. If you want to install Ansible by other means, you can disable the APT
+# package installation here.
+bossjones__ansible_packages: [ 'ansible' ]
+
+# List of additional APT packages to install with bossjones.
+bossjones__packages: []
+
+# Specify timeout of the ``async`` Ansible command that downloads bossjones
+# playbooks and roles, in seconds.
+bossjones__async_timeout: '{{ (60 * 20) }}'

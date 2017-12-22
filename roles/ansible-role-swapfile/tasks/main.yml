@@ -1,4 +1,13 @@
 ---
+# FIXME: Convert from this
+# sudo fallocate -l 4G /swapfile && \
+# sudo chmod 600 /swapfile && \
+# sudo ls -lh /swapfile && \
+# sudo mkswap /swapfile && \
+# sudo swapon /swapfile && \
+# sudo swapon -s && \
+# free -m && \
+
 - name: Write swapfile
   command: |
     {% if swapfile_use_dd %}

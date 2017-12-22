@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  vars:
+    ulimit_config:
+      - domain: '*'
+        type: soft
+        item: nofile
+        value: 64000
+      - domain: '*'
+        type: hard
+        item: nofile
+        value: 64000
+  roles:
+    - role: ulimit
+    - role: sysctl-performance

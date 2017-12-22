@@ -1,7 +1,9 @@
 # include .mk
 
 SHELL=/bin/bash
-ELASTIC_REGISTRY ?= docker.elastic.co
+
+username := bossjones
+# container_name := elasticsearch
 
 # source: https://github.com/ansible-city/aws_foundation/blob/cb7352ab84a0e437f1be8cebfab541af8df09c29/Makefile
 # ROLE_NAME ?= $(shell basename $$(pwd))
@@ -10,11 +12,19 @@ ELASTIC_REGISTRY ?= docker.elastic.co
 # PATH := $(VENV)/bin:$(shell printenv PATH)
 # SHELL := env PATH=$(PATH) /bin/bash
 
+# verify that certain variables have been defined off the bat
+check_defined = \
+    $(foreach 1,$1,$(__check_defined))
+__check_defined = \
+    $(if $(value $1),, \
+      $(error Undefined $1$(if $(value 2), ($(strip $2)))))
+
+list_allowed_args := name
+
 export PATH := ./bin:./venv/bin:$(PATH)
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
-
 
 .PHONY: list help
 # .PHONY: all dockerfile docker-compose test test-build lint clean pristine run run-single run-cluster build release-manager release-manager-snapshot push
@@ -126,3 +136,18 @@ venv: requirements.txt
 
 # .mk:
 # 	echo "" > .mk
+
+ansible-init-role:
+	$(call check_defined, name, Please set name)
+	ansible-galaxy init --offline --init-path=./roles $(username).$(name)
+
+# ansible-lint-bossjones-roles:
+# 	LINT_FILES=`find ./roles/bossjones.* -name "*.yml" -print | xargs`
+# 	ansible-lint $$LINT_FILES
+
+# [ANSIBLE0013] Use shell only when shell functionality is required
+ansible-lint-bossjones-roles:
+	bash -c "find ./roles/bossjones.* -type f -name '*.y*ml' -print0 | xargs -I FILE -t -0 -n1 ansible-lint -x ANSIBLE0006,ANSIBLE0007,ANSIBLE0010,ANSIBLE0013 FILE"
+
+yamllint-bossjones-roles:
+	bash -c "find ./roles/bossjones.* -type f -name '*.y*ml' -print0 | xargs -I FILE -t -0 -n1 yamllint FILE"

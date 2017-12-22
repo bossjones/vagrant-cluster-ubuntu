@@ -1,0 +1,12 @@
+---
+# defaults file for bossjones.ansible-vagrant-setup
+
+bossjones__user: vagrant
+bossjones__group: vagrant
+
+bossjones__git_repo_ansible_vagrant:
+- { repo: 'https://github.com/KAMI911/ansible-role-sysctl-performance', folder: 'sysctl-performance' }
+
+- { repo: 'https://github.com/picotrading/ansible-ulimit', folder: 'ulimit' }
+
+- { repo: 'https://github.com/dev-sec/ansible-os-hardening.git', folder: 'ansible-os-hardening' }

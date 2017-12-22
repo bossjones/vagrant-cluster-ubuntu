@@ -47,5 +47,10 @@ roles/yaegashi.blockinfile
 roles/zzet.rbenv
 roles/ANXS.build-essential
 roles/ANXS.git
+roles/debops.apt
+roles/debops.bootstrap
+roles/debops.core
+roles/debops.secret
+roles/debops.users
 
 *.retry
