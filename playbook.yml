@@ -52,7 +52,7 @@
       users:
       - username: vagrant
         # 'wheel', - BSD
-        groups: ['sudo', 'docker','adm']
+        groups: ['sudo', 'docker','adm', 'vagrant']
         append: yes
         uid: 1000
         home: /home/vagrant
@@ -63,7 +63,6 @@
     - role: debops.apt
     - role: debops.bootstrap
     - role: debops.core
-    - role: debops.debug
     # BORROWED A LOT OF LOGIC FROM https://github.com/retr0h/ansible-etcd
     # FIXME: Lets grab something via etcd discovery
     # FIXME: Lets grab something via etcd discovery
@@ -106,6 +105,7 @@
     - role: bossjones.etcd
       etcd_daemon: "upstart"
       etcd_interface: eth0
+    - role: debops.debug
 
 - hosts: docker_swarm_manager:docker_swarm_worker
   gather_facts: yes
