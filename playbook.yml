@@ -194,7 +194,7 @@
       - "* soft memlock unlimited"
       - "* hard nofile 65536"
   roles:
-    - role: geerlingguy.dotfiles
+    - role: bossjones.dotfiles
       dotfiles_repo: "https://github.com/bossjones/linux-dotfiles.git"
       dotfiles_repo_local_destination: "~/dev/dotfiles"
       dotfiles_home: "~"
