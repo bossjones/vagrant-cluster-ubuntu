@@ -87,6 +87,8 @@
     dest: "/home/{{bossjones__user}}/{{item.folder}}"
     version: master
     update: no
+  become: "{{bossjones__user}}"
+  become_user: "{{bossjones__user}}"
   with_item:
     - "{{ bossjones__git_bash_it_repo }}"
   when: item|d()

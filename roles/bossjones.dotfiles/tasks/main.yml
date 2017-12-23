@@ -28,5 +28,7 @@
     src: "{{ dotfiles_repo_local_destination }}/{{ item }}"
     dest: "{{ dotfiles_home }}/{{ item }}"
     state: link
+    owner: "{{bossjones__user}}"
+    group: "{{bossjones__group}}"
   become: no
   with_items: "{{ dotfiles_files }}"

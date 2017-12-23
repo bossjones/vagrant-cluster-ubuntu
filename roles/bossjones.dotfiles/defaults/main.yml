@@ -1,10 +1,13 @@
 ---
 # defaults file for bossjones.dotfiles
+bossjones__user: vagrant
+bossjones__group: vagrant
+
 dotfiles_repo: "https://github.com/geerlingguy/dotfiles.git"
 dotfiles_repo_accept_hostkey: no
 dotfiles_repo_local_destination: "~/Documents/dotfiles"
 
-dotfiles_home: "~"
+dotfiles_home: "/home/{{bossjones__user}}"
 dotfiles_files:
   - .bash_profile
   - .gitignore
