@@ -107,6 +107,7 @@
     - role: bossjones.etcd
       etcd_daemon: "upstart"
       etcd_interface: eth1
+      etcd_initial_cluster_token: etcd-cluster-3
       tags:
       - etcd
     # - role: debops.netbox
