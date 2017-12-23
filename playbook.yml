@@ -200,7 +200,7 @@
       dotfiles_home: "~"
       dotfiles_files:
         - .bash_profile
-        - .gitignore
+        - gitignore
         - .inputrc
         - .vimrc
         - .aliases
@@ -208,9 +208,7 @@
         - .gemrc
         - .pdbrc
         - .pdbrc.py
-        - .profile
         - .functions
-        - .bashrc
         - .bash.functions.d
     - role: debops.debug
 
