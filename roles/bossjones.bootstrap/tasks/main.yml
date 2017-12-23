@@ -79,3 +79,15 @@
         recurse=yes
         owner="{{bossjones__user}}"
         group="{{bossjones__group}}"
+
+- name: git clone {{item.repo}}
+  git:
+    repo: "{{item.repo}}"
+    # /home/vagrant/ansible/roles
+    dest: "/home/{{bossjones__user}}/{{item.folder}}"
+    version: master
+    update: no
+  with_item:
+    - "{{ bossjones__git_bash_it_repo }}"
+  when: item|d()
+  ignore_errors: yes

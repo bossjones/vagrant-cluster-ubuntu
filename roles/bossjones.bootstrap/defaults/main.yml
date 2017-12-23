@@ -18,3 +18,6 @@ bossjones__packages: []
 # Specify timeout of the ``async`` Ansible command that downloads bossjones
 # playbooks and roles, in seconds.
 bossjones__async_timeout: '{{ (60 * 20) }}'
+
+bossjones__git_bash_it_repo:
+- { repo: 'https://github.com/Bash-it/bash-it', folder: '.bash_it' }
