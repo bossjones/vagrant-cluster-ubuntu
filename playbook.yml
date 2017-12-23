@@ -210,6 +210,8 @@
         - .pdbrc.py
         - .functions
         - .bash.functions.d
+      tags:
+        - dotfiles
     - role: debops.debug
 
   pre_tasks:
