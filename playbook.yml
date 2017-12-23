@@ -194,6 +194,24 @@
       - "* soft memlock unlimited"
       - "* hard nofile 65536"
   roles:
+    - role: geerlingguy.dotfiles
+      dotfiles_repo: "https://github.com/bossjones/linux-dotfiles.git"
+      dotfiles_repo_local_destination: "~/dev/dotfiles"
+      dotfiles_home: "~"
+      dotfiles_files:
+        - .bash_profile
+        - .gitignore
+        - .inputrc
+        - .vimrc
+        - .aliases
+        - .dircolors
+        - .gemrc
+        - .pdbrc
+        - .pdbrc.py
+        - .profile
+        - .functions
+        - .bashrc
+        - .bash.functions.d
     - role: debops.debug
 
   pre_tasks:

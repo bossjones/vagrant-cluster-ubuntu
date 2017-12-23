@@ -63,3 +63,19 @@
         recurse=yes
         owner="{{bossjones__user}}"
         group="{{bossjones__group}}"
+
+- name: create /home/{{bossjones__user}}/dev
+  file: path=/home/{{bossjones__user}}/dev
+        state=directory
+        mode=0755
+        recurse=yes
+        owner="{{bossjones__user}}"
+        group="{{bossjones__group}}"
+
+- name: create /home/{{bossjones__user}}/go
+  file: path=/home/{{bossjones__user}}/go
+        state=directory
+        mode=0755
+        recurse=yes
+        owner="{{bossjones__user}}"
+        group="{{bossjones__group}}"
