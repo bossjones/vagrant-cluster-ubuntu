@@ -477,3 +477,9 @@ WARNING: No cpuset support
 
 # DNS ( PowerDNS )
 - https://github.com/PowerDNS/pdns-ansible/tree/master/molecule/common
+
+
+```
+become: pi
+become_user: pi
+```

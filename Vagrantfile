@@ -281,7 +281,7 @@ Vagrant.configure("2") do |config|
           # ansible.raw_arguments = Shellwords.shellsplit(ENV['ANSIBLE_ARGS']) if ENV['ANSIBLE_ARGS']
           # CLI command.
           # ANSIBLE_ARGS='--extra-vars "some_var=value"' vagrant up
-          # ansible.tags="dotfiles"
+          ansible.tags="bootstrap"
         end  # config.vm.provision "ansible" do |ansible|
       end  # if i == num_instances
 

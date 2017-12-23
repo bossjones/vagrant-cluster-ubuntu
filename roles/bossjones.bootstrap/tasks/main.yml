@@ -80,7 +80,7 @@
         owner="{{bossjones__user}}"
         group="{{bossjones__group}}"
 
-- name: git clone {{item.repo}}
+- name: NICE bash-it git clone {{item.repo}}
   git:
     repo: "{{item.repo}}"
     # /home/vagrant/ansible/roles
@@ -89,7 +89,7 @@
     update: no
   become: "{{bossjones__user}}"
   become_user: "{{bossjones__user}}"
-  with_item:
+  with_items:
     - "{{ bossjones__git_bash_it_repo }}"
   when: item|d()
   ignore_errors: yes

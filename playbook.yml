@@ -57,6 +57,8 @@
         uid: 1000
         home: /home/vagrant
     - role: bossjones.bootstrap
+      tags:
+        - bootstrap
     - role: bossjones.python
     # - role: bossjones.ansible-vagrant-setup
     - role: bossjones.perf-tools
